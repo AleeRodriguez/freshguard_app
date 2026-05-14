@@ -33,7 +33,7 @@ app.get('/api/test', (req, res) => {
 app.use('/api/productos', productosRouter);
 app.use('/api/usuarios', usuariosRouter);
 
-sequelize.sync({ alter: true })
+sequelize.sync({ force: true })
   .then(() => {
     console.log('Base de datos conectada y tablas sincronizadas.');
     app.listen(PORT, () => {
