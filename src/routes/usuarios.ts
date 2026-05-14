@@ -6,10 +6,21 @@ const router = Router();
 // GET todos los usuarios
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const usuarios = await Usuario.findAll({ where: { activo: true } });
+    const usuarios = await Usuario.findAll();
     res.json(usuarios);
   } catch (err) {
-    res.status(500).json({ error: 'Error al obtener usuarios' });
+    res.status(500).json({ error: 'Error al obtener usuarios', detalle: String(err) });
+  }
+});
+
+// GET usuario por uid de Firebase
+router.get('/:uid', async (req: Request, res: Response) => {
+  try {
+    const usuario = await Usuario.findOne({ where: { uid: req.params.uid } });
+    if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
+    res.json(usuario);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener usuario', detalle: String(err) });
   }
 });
 
@@ -19,15 +30,17 @@ router.post('/', async (req: Request, res: Response) => {
     const usuario = await Usuario.create(req.body);
     res.status(201).json(usuario);
   } catch (err) {
-    res.status(500).json({ error: 'Error al crear usuario' });
+    console.error('Error creando usuario:', err);
+    res.status(500).json({ error: 'Error al crear usuario', detalle: String(err) });
   }
 });
 
-// PATCH habilitar/deshabilitar usuario
-router.patch('/:id', async (req: Request, res: Response) => {
+// PATCH actualizar usuario (rol, activo)
+router.patch('/:uid', async (req: Request, res: Response) => {
   try {
-    await Usuario.update(req.body, { where: { id: req.params.id } });
-    res.json({ ok: true });
+    await Usuario.update(req.body, { where: { uid: req.params.uid } });
+    const updated = await Usuario.findOne({ where: { uid: req.params.uid } });
+    res.json(updated);
   } catch (err) {
     res.status(500).json({ error: 'Error al actualizar usuario' });
   }
