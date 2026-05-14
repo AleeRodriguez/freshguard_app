@@ -16,6 +16,7 @@ ProductoCargado.init({
   sucursalId: { type: DataTypes.INTEGER, allowNull: true },
   expiredNotified: { type: DataTypes.BOOLEAN, defaultValue: false },
   expiringNotified: { type: DataTypes.BOOLEAN, defaultValue: false },
+  codigoBarras: { type: DataTypes.STRING, allowNull: true },
 }, {
   sequelize,
   modelName: 'ProductoCargado',
