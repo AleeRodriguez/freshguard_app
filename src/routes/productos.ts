@@ -28,13 +28,15 @@ router.get('/cargados', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/barcode/:codigo', async (req: Request, res: Response) => {
+router.get('/cargados/barcode/:codigo', async (req: Request, res: Response) => {
   try {
-    const producto = await Producto.findOne({ where: { codigoBarras: req.params.codigo } });
-    if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
-    res.json(producto);
+    const lote = await ProductoCargado.findOne({
+      where: { codigoBarras: req.params.codigo }
+    });
+    if (!lote) return res.status(404).json({ error: 'No encontrado' });
+    res.json(lote);
   } catch (err) {
-    res.status(500).json({ error: 'Error al buscar producto', detalle: String(err) });
+    res.status(500).json({ error: 'Error al buscar', detalle: String(err) });
   }
 });
 
