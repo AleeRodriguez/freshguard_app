@@ -68,5 +68,14 @@ router.patch('/cargados/:id', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error al actualizar lote' });
   }
 });
+router.delete('/cargados/:id', async (req: Request, res: Response) => {
+  try {
+    await ProductoCargado.destroy({ where: { id: req.params.id } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Error eliminando lote:', err);
+    res.status(500).json({ error: 'Error al eliminar producto' });
+  }
+});
 
 export default router;
